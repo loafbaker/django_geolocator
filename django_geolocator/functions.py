@@ -23,7 +23,7 @@ def locu_search(query):
 
 	data = json.load(obj)
 
-	locations = [abc['name'] for abc in data['objects']]
+	locations = [[abc['name'], abc['id']] for abc in data['objects']]
 
 	return locations
 

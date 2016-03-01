@@ -18,6 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^$', 'django_geolocator.views.home', name='home'),
+    url(r'^location/(?P<id>[\w]+)$', 'locations.views.single_location', name='single_location'),
 
     url(r'^admin/', include(admin.site.urls)),
 ]
