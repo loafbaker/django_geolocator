@@ -1,8 +1,18 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block jumbotron %}
 
-<h1>Welcome Home</h1>
+<div class="jumbotron">
+  <h1>Welcome Home</h1>
+  <p>This is a django-based applications for locating specific spot with open-source API. It is certainly an interesting development practice for a back-end engineer.</p>
+  <p>
+    <a class="btn btn-lg btn-primary" href="#" role="button">View more projects &raquo;</a>
+  </p>
+</div>
+
+{% endblock %}
+
+{% block content %}
 
 <form method="POST" action="">{% csrf_token %}
   <input type="text" name="search" />
@@ -14,7 +24,7 @@
 <h3>Your search for: {{ query }}</h3>
 <ul>
   {% for location in locations %}
-  <li>{{ location }}</li>
+  <li><a href="{% url 'single_location' location.1 %}">{{ location }}</a></li>
   {% endfor %}
 </ul>
 
