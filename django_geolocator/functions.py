@@ -28,6 +28,24 @@ def locu_search(query):
 	return locations
 
 
+def locu_details(locu_id):
+    api = LOCU_API
+
+    url = 'https://api.locu.com/v1_0/venue/'
+
+    new_url = url + locu_id + '/?api_key=' + api
+
+    obj = urllib2.urlopen(new_url)
+
+    data = json.load(obj)
+
+    for abc in data['objects']:
+        details = [abc['lat'], abc['long']]   # Assume only one object returned
+
+    return details
+
+
+
 def find_place(query):
     g = geocoders.GoogleV3()
     place, (lat, lng) = g.geocode(query)

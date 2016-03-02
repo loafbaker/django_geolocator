@@ -23,8 +23,8 @@
 
 <h3>Your search for: {{ query }}</h3>
 <ul>
-  {% for location in locations %}
-  <li><a href="{% url 'single_location' location.1 %}">{{ location }}</a></li>
+  {% for name, loc_id in locations %}
+  <li><a href="{% url 'single_location' loc_id %}">{{ name }}</a></li>
   {% endfor %}
 </ul>
 
