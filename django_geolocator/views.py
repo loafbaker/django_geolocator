@@ -13,7 +13,8 @@ def home(request):
 	if request.method == 'POST':
 		print request.POST
 		query = request.POST['search']
-
+		
+		"""
 		# Option 1: Locu Search
 		locations = locu_search(query)
 		for loc in locations:
@@ -21,8 +22,15 @@ def home(request):
 			new_location, created = Location.objects.get_or_create(name=name, locu_id=locu_id)
 			if created:
 				print "Created new id for %s with locu id of %s" % (name, locu_id)
+		"""
+
 		# Option 2: Foursquare Search
-		# locations = foursquare_search(query)
+		locations = foursquare_search(query)
+		for loc in locations:
+			name, four_id = loc[0], loc[1]
+			new_location, created = Location.objects.get_or_create(name=name, four_id=four_id)
+			if created:
+				print "Created new id for %s with foursquare id of %s" % (name, four_id)
 
 		context['query'] = query
 		context['locations'] = locations

@@ -69,7 +69,7 @@ def foursquare_search(query):
 
     data = json.load(obj)
 
-    locations = [abc['name'] for abc in data['response']['venues']]
+    locations = [[abc['name'], abc['id']] for abc in data['response']['venues']]
 
     # for abc in data['response']['venues']:
     #     print abc['name']
@@ -87,3 +87,23 @@ def foursquare_search(query):
     #         pass
 
     return locations
+
+
+def foursquare_details(four_id):
+    token = FOURSQUARE_TOKEN
+
+    today = time.strftime("%Y%m%d")
+
+    url = 'https://api.foursquare.com/v2/venues/'
+
+    full_url = url + four_id + '?v=' + today + '&oauth_token=' + token
+
+    obj = urllib2.urlopen(full_url)
+
+    data = json.load(obj)
+
+    venue = data['response']['venue']
+
+    details = [venue['location']['lat'], venue['location']['lng']]
+
+    return details
