@@ -20,3 +20,5 @@ Ver.6   [Location Details with Locu & Setup Google Maps](../../tree/7e7db2f3cee8
 Ver.7   [Location Details with Foursquare](../../tree/b4c8075c9b2ef91d64ebf795848cc385312433fa)
 
 Ver.8   [Get User's Location](../../tree/305327b4c4dd948c4cff703d27fdfa2b443f718a)
+
+Ver.9   [User Location in Views](../../tree/3327de2f4b69a56196f3bbff21a61f91bbf38597)

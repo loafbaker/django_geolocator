@@ -7,6 +7,16 @@ from geopy import geocoders
 from .apis import *
 
 
+def find_city_lat_lng(lat, lng):
+    g = geocoders.GoogleV3()
+    find = "%s %s" % (lat, lng)
+    location = g.geocode(find)
+    address = location.raw['address_components']
+    city_names = [component['long_name'] 
+                 for component in address 
+                 if 'locality' in component['types']]
+    return city_names[0]
+
 
 def locu_search(query):
 	api = LOCU_API

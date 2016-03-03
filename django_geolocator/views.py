@@ -3,7 +3,7 @@ from django.core.context_processors import csrf
 
 from locations.models import Location
 
-from .functions import locu_search, foursquare_search
+from .functions import locu_search, foursquare_search, find_city_lat_lng
 
 
 def home(request):
@@ -16,10 +16,10 @@ def home(request):
 
 		try:
 			lat = request.POST['lat']
-		except:
-			pass
-		try:
 			lng = request.POST['lng']
+			local_query = find_city_lat_lng(lat, lng)
+			if query == '':
+				query = local_query
 		except:
 			pass
 		
