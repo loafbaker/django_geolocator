@@ -7,8 +7,12 @@
   }
 
   function onSuccess(location) {
+      $lat = location.coords.latitude;
+      $lng = location.coords.longitude;
       $loc_text = location.coords.latitude + ", " + location.coords.longitude;
       console.log($loc_text);
+      $('#search_form').append("<input type=\"hidden\" name=\"lat\" value=\"" + $lat + "\">");
+      $('#search_form').append("<input type=\"hidden\" name=\"lng\" value=\"" + $lng + "\">");
   }
 
   function onError() {
@@ -31,7 +35,7 @@
 
 {% block content %}
 
-<form method="POST" action="">{% csrf_token %}
+<form method="POST" action="" id="search_form">{% csrf_token %}
   <input type="text" name="search" />
   <input type="submit" value="submit" />
 </form>

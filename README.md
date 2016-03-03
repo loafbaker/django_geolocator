@@ -18,3 +18,5 @@ Ver.5   [Implement Bootstrap](../../tree/e92fef1641b525dbf99c0ef17f17a0b585113b8
 Ver.6   [Location Details with Locu & Setup Google Maps](../../tree/7e7db2f3cee82dd8775a85a50f15862e727b9179)
 
 Ver.7   [Location Details with Foursquare](../../tree/b4c8075c9b2ef91d64ebf795848cc385312433fa)
+
+Ver.8   [Get User's Location](../../tree/305327b4c4dd948c4cff703d27fdfa2b443f718a)
