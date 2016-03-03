@@ -50,7 +50,12 @@
 
 <div class="row">
   <div class="col-md-6">
-    {{ location }} -- {{ location.locu_id }}
+    {{ location }}
+    {% if location.locu_id %}
+     -- {{ location.locu_id }}
+    {% elif location.four_id %}
+     -- {{ location.four_id }}
+    {% endif %}
     {{ details }}
   </div>
 

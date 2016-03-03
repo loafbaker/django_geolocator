@@ -1,5 +1,22 @@
 {% extends 'base.html' %}
 
+{% block jquery %}
+  window.onload = function(){
+      if(navigator.geolocation)
+          navigator.geolocation.getCurrentPosition(onSuccess, onError);
+  }
+
+  function onSuccess(location) {
+      $loc_text = location.coords.latitude + ", " + location.coords.longitude;
+      console.log($loc_text);
+  }
+
+  function onError() {
+      console.log("Location not allowed.");
+  }
+{% endblock %}
+
+
 {% block jumbotron %}
 
 <div class="jumbotron">
