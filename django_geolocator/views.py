@@ -1,5 +1,4 @@
-from django.shortcuts import render_to_response
-from django.core.context_processors import csrf
+from django.shortcuts import render
 
 from locations.models import Location
 
@@ -8,10 +7,9 @@ from .functions import locu_search, foursquare_search, find_city_lat_lng
 
 def home(request):
 	context = {}
-	context.update(csrf(request))
 
 	if request.method == 'POST':
-		print request.POST
+		# print(request.POST)
 		query = request.POST['search']
 
 		try:
@@ -22,14 +20,15 @@ def home(request):
 				query = local_query
 		except:
 			pass
-		
-		# Option 1: Locu Search
+
+		"""
+		# Option 1: Locu Search (obsolete)
 		locations = locu_search(query)
 		for loc in locations:
 			name, locu_id = loc[0], loc[1]
 			new_location, created = Location.objects.get_or_create(name=name, locu_id=locu_id)
 			if created:
-				print "Created new id for %s with locu id of %s" % (name, locu_id)
+				print(f"Created new id for {name} with locu id of {locu_id}")
 		"""
 		# Option 2: Foursquare Search
 		locations = foursquare_search(query)
@@ -37,10 +36,9 @@ def home(request):
 			name, four_id = loc[0], loc[1]
 			new_location, created = Location.objects.get_or_create(name=name, four_id=four_id)
 			if created:
-				print "Created new id for %s with foursquare id of %s" % (name, four_id)
-		"""
+				print(f"Created new id for {name} with foursquare id of {four_id}")
 
 		context['query'] = query
 		context['locations'] = locations
 
-	return render_to_response('home.html', context)
+	return render(request, 'home.html', context)

@@ -1,6 +1,4 @@
-import urllib2
-import json
-import time
+import requests
 
 from geopy import geocoders
 
@@ -8,7 +6,7 @@ from .apis import *
 
 
 def find_city_lat_lng(lat, lng):
-    g = geocoders.GoogleV3()
+    g = geocoders.GoogleV3(api_key = GOOGLE_GEOCODING_API_KEY)
     find = "%s %s" % (lat, lng)
     location = g.geocode(find)
     address = location.raw['address_components']
@@ -18,26 +16,30 @@ def find_city_lat_lng(lat, lng):
     return city_names[0]
 
 
+# OBSOLETE
 def locu_search(query):
-	api = LOCU_API
+    api = LOCU_API
 
-	url = 'https://api.locu.com/v1_0/venue/search/?'
+    url = 'https://api.locu.com/v1_0/venue/search/?'
 
-	local = query
+    local = query
 
-	locality = local.replace(' ', '%20')
+    locality = local.replace(' ', '%20')
 
-	new_url = url + 'api_key=' + api + '&locality=' + locality
+    new_url = url + 'api_key=' + api + '&locality=' + locality
 
-	obj = urllib2.urlopen(new_url)
+    resp = requests.get(new_url)
 
-	data = json.load(obj)
+    resp.raise_for_status()
 
-	locations = [[abc['name'], abc['id']] for abc in data['objects']]
+    results = resp.json()
 
-	return locations
+    locations = [[abc['name'], abc['id']] for abc in results['objects']]
+
+    return locations
 
 
+# OBSOLETE
 def locu_details(locu_id):
     api = LOCU_API
 
@@ -45,11 +47,13 @@ def locu_details(locu_id):
 
     new_url = url + locu_id + '/?api_key=' + api
 
-    obj = urllib2.urlopen(new_url)
+    resp = requests.get(new_url)
 
-    data = json.load(obj)
+    resp.raise_for_status()
 
-    for abc in data['objects']:
+    results = resp.json()
+
+    for abc in results['objects']:
         details = [abc['lat'], abc['long']]   # Assume only one object returned
 
     return details
@@ -57,63 +61,73 @@ def locu_details(locu_id):
 
 
 def find_place(query):
-    g = geocoders.GoogleV3()
-    place, (lat, lng) = g.geocode(query)
-    return place, lat, lng
+    g = geocoders.GoogleV3(api_key = GOOGLE_GEOCODING_API_KEY)
+    try:
+        place, (lat, lng) = g.geocode(query)
+        return place, lat, lng
+    except:
+        return "", -1, -1
 
 
 def foursquare_search(query):
-    token = FOURSQUARE_TOKEN
-
-    today = time.strftime("%Y%m%d")
-
     place, lat, lng = find_place(query)
 
-    latlng = str(lat) + '%2C%20' + str(lng)
+    if place == "" and lat == -1 and lng == -1:
+        return []
 
-    url = 'https://api.foursquare.com/v2/venues/search?intent=checkin'
+    url = 'https://places-api.foursquare.com/places/search'
 
-    full_url = url + '&v=' + today + '&ll=' + latlng + '&oauth_token=' + token
+    headers = {
+        "X-Places-Api-Version": "2025-06-17",
+        "Accept": "application/json",
+        "Authorization": f"Bearer {FOURSQUARE_API_KEY}",
+    }
 
-    obj = urllib2.urlopen(full_url)
+    data = {
+        "ll": str(lat) + "," + str(lng),
+        "radius": 5000,
+    }
 
-    data = json.load(obj)
+    resp = requests.get(url, headers=headers, data=data)
 
-    locations = [[abc['name'], abc['id']] for abc in data['response']['venues']]
+    resp.raise_for_status()
 
-    # for abc in data['response']['venues']:
-    #     print abc['name']
+    results = resp.json()
+
+    locations = [[abc['name'], abc['fsq_place_id']] for abc in results['results']]
+
+    # for abc in results['results']:
+    #     print(abc['name'])
     #     try:
-    #         print 'phone   = ' + abc['contact']['phone']
+    #         print(f"phone   = {abc['tel']}")
     #     except Exception:
     #         pass
     #     try:
-    #         print 'twitter = ' + abc['contact']['twitter']
+    #         print(f"twitter = {abc['social_media']['twitter']}")
     #     except Exception:
     #         pass
     #     try:
-    #         print 'city    = ' + abc['location']['city']
+    #         print(f"city    = {abc['location']['locality']}")
     #     except Exception:
     #         pass
 
     return locations
 
 
-def foursquare_details(four_id):
-    token = FOURSQUARE_TOKEN
+def foursquare_details(fsq_place_id):
+    url = f"https://places-api.foursquare.com/places/{fsq_place_id}"
 
-    today = time.strftime("%Y%m%d")
+    headers = {
+        "X-Places-Api-Version": "2025-06-17",
+        "Authorization": f"Bearer {FOURSQUARE_API_KEY}",
+    }
 
-    url = 'https://api.foursquare.com/v2/venues/'
+    resp = requests.get(url, headers=headers)
 
-    full_url = url + four_id + '?v=' + today + '&oauth_token=' + token
+    resp.raise_for_status()
 
-    obj = urllib2.urlopen(full_url)
+    results = resp.json()
 
-    data = json.load(obj)
-
-    venue = data['response']['venue']
-
-    details = [venue['location']['lat'], venue['location']['lng']]
+    details = [results['latitude'], results['longitude']]
 
     return details
