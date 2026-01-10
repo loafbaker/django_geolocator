@@ -15,14 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path
 
 from locations import views as locations_views
 from . import views as django_geolocator_views
 
 urlpatterns = [
     path('', django_geolocator_views.home, name='home'),
-    re_path(r'^location/(?P<id>[\w]+)$', locations_views.single_location, name='single_location'),
+    path('location/<str:id>/', locations_views.single_location, name='single_location'),
 
     path('admin/', admin.site.urls),
 ]
