@@ -1,0 +1,11 @@
+[project]
+name = "django-geolocator"
+version = "0.2.0"
+description = " A django-based app for accessing and querying real-world geographic location"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "django>=5.2",
+    "geopy>=2.4",
+    "requests>=2.32",
+]
